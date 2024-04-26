@@ -1,0 +1,233 @@
+openapi: 3.0.0
+servers:
+  - description: Cluster Endpoint
+    url: /api
+info:
+  description: Pharmacy Prescription management system
+  version: "1.0.0"
+  title: Pharmacy Prescription API
+  contact:
+    email: xkabac@stuba.sk
+  license:
+    name: CC BY 4.0
+    url: "https://creativecommons.org/licenses/by/4.0/"
+tags:
+ - name: prescriptions
+   description: Pharmacy Prescription API
+paths:
+  "/prescriptions/{ambulanceId}":
+    get:
+      tags:
+        - prescriptions
+      summary: Provides the list of prescriptions for an ambulance
+      operationId: getAmbulancePrescriptions
+      description: By using ambulanceId, you get the list of prescriptions issued by the ambulance
+      parameters:
+        - in: path
+          name: ambulanceId
+          description: Pass the ID of the particular ambulance
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of prescriptions for the ambulance
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Prescription"
+        "404":
+          description: Ambulance with such ID does not exist
+    post:
+      tags:
+        - prescriptions
+      summary: Creates a new prescription
+      operationId: createPrescription
+      description: Use this endpoint to create a new prescription associated with an ambulance.
+      parameters:
+        - in: path
+          name: ambulanceId
+          description: The ID of the ambulance where the prescription was issued.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Prescription"
+        description: The prescription to create.
+        required: true
+      responses:
+        "201":
+          description: Prescription created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Prescription"
+        "400":
+          description: Invalid input provided.
+        "404":
+          description: Ambulance with the provided ID does not exist.
+
+  "/prescriptions/{ambulanceId}/{prescriptionId}":
+    get:
+      tags:
+        - prescriptions
+      summary: Retrieves a specific prescription by ID
+      operationId: getPrescriptionById
+      description: Use this endpoint to retrieve details of a specific prescription by its ID and ambulanceId.
+      parameters:
+        - in: path
+          name: ambulanceId
+          description: The ID of the ambulance associated with the prescription.
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: prescriptionId
+          description: The ID of the prescription to retrieve.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Prescription retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Prescription"
+        "404":
+          description: Prescription or ambulance with the provided ID does not exist.
+
+    put:
+      tags:
+        - prescriptions
+      summary: Updates a specific prescription
+      operationId: updatePrescription
+      description: Use this endpoint to update details of a specific prescription.
+      parameters:
+        - in: path
+          name: ambulanceId
+          description: The ID of the ambulance associated with the prescription.
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: prescriptionId
+          description: The ID of the prescription to update.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Prescription"
+        description: The updated prescription details.
+        required: true
+      responses:
+        "200":
+          description: Prescription updated successfully.
+        "400":
+          description: Invalid input provided.
+        "404":
+          description: Prescription or ambulance with the provided ID does not exist.
+
+    delete:
+      tags:
+        - prescriptions
+      summary: Deletes a specific prescription
+      operationId: deletePrescription
+      description: Use this endpoint to delete a specific prescription by its ID.
+      parameters:
+        - in: path
+          name: ambulanceId
+          description: The ID of the ambulance associated with the prescription to delete.
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: prescriptionId
+          description: The ID of the prescription to delete.
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Prescription deleted successfully.
+        "404":
+          description: Prescription or ambulance with the provided ID does not exist.
+
+
+components:
+  schemas:
+    Prescription:
+      type: object
+      required: [id, patientName, doctorName, issuedDate, validUntil, medicines, status, ambulanceId]
+      properties:
+        id:
+          type: string
+          example: RX123456789
+        patientName:
+          type: string
+          example: John Smith
+        doctorName:
+          type: string
+          example: Dr. Dutoschwarz
+        issuedDate:
+          type: string
+          format: date
+          example: "2024-04-01"
+        validUntil:
+          type: string
+          format: date
+          example: "2024-06-01"
+        medicines:
+          type: array
+          items:
+            $ref: '#/components/schemas/Medicine'
+        status:
+          type: string
+          example: partially dispensed
+        instructions:
+          type: string
+          example: Take one tablet three times a day after meals.
+        ambulanceId:
+          type: string
+          example: "AMB123456789"
+        notes:
+          type: string
+          example: Patient allergic to penicillin. Adjusted medication accordingly.
+
+    Medicine:
+      type: object
+      required: [medicineId, name, dosage, quantityPrescribed, quantityDispensed, dispenseDate]
+      properties:
+        medicineId:
+          type: string
+          example: MED3001
+        name:
+          type: string
+          example: Amoxicillin
+        dosage:
+          type: string
+          example: 500mg
+        quantityPrescribed:
+          type: integer
+          example: 30
+        quantityDispensed:
+          type: integer
+          example: 30
+        dispenseDate:
+          type: string
+          format: date
+          example: "2024-04-02"
+        notes:
+          type: string
+          example: Take 2 times a day with food to avoid stomach upset.
+        unit:
+          type: string
+          example: tablets
