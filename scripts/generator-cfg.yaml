@@ -1,0 +1,8 @@
+generatorName: go-gin-server
+templateDir: /local/scripts/templates
+outputDir: /local
+inputSpec: /local/api/pharmacy-pl.openapi.yaml
+enablePostProcessFile: true
+additionalProperties:
+  apiPath: internal/pharmacy_pl
+  packageName: pharmacy_pl

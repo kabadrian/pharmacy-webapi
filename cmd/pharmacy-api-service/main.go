@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kabadrian/pharmacy-webapi/api"
+	"github.com/kabadrian/pharmacy-webapi/internal/pharmacy_pl"
 )
 
 func main() {
@@ -22,6 +23,7 @@ func main() {
 	engine := gin.New()
 	engine.Use(gin.Recovery())
 	// request routings
+	pharmacy_pl.AddRoutes(engine)
 	engine.GET("/openapi", api.HandleOpenApi)
 	engine.Run(":" + port)
 }
