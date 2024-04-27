@@ -42,6 +42,21 @@ paths:
           description: Invalid input provided.
         "409": 
           description: Ambulance with provided id already exists.
+    get:
+      tags:
+        - ambulances
+      summary: Retrieves all ambulances
+      operationId: getAllAmbulances
+      description: Use this endpoint to retrieve a list of all ambulances in the system.
+      responses:
+        "200":
+          description: A list of ambulances was retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ambulance'
 
   "/ambulances/{ambulanceId}":
     delete:
@@ -62,7 +77,7 @@ paths:
           description: Ambulance deleted successfully.
         "404":
           description: Ambulance with the provided ID does not exist.
-  "/prescriptions/{ambulanceId}":
+  "/ambulances/{ambulanceId}/prescriptions":
     get:
       tags:
         - prescriptions
@@ -213,7 +228,7 @@ components:
   schemas:
     Prescription:
       type: object
-      required: [id, patientName, doctorName, issuedDate, validUntil, medicines, status, ambulanceId]
+      required: [id, patientName, patientId, doctorName, issuedDate, validUntil, medicines, status]
       properties:
         id:
           type: string
@@ -221,6 +236,9 @@ components:
         patientName:
           type: string
           example: John Smith
+        patientId:
+          type: string
+          example: MD0213213
         doctorName:
           type: string
           example: Dr. Dutoschwarz
@@ -242,9 +260,6 @@ components:
         instructions:
           type: string
           example: Take one tablet three times a day after meals.
-        ambulanceId:
-          type: string
-          example: "AMB123456789"
         notes:
           type: string
           example: Patient allergic to penicillin. Adjusted medication accordingly.
@@ -334,7 +349,7 @@ components:
                 dosage: "200mg"
                 quantityPrescribed: 50
                 quantityDispensed: 50
-                dispenseDate: "2024-04-16"
+                dispenseDate: "2038-12-24T10:35:00Z"
                 notes: "Take with food. Do not exceed 6 tablets per day."
                 unit: tablets
             status: "dispensed"

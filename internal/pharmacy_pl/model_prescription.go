@@ -20,6 +20,8 @@ type Prescription struct {
 
 	PatientName string `json:"patientName"`
 
+	PatientId string `json:"patientId"`
+
 	DoctorName string `json:"doctorName"`
 
 	IssuedDate time.Time `json:"issuedDate"`
@@ -31,8 +33,6 @@ type Prescription struct {
 	Status string `json:"status"`
 
 	Instructions string `json:"instructions,omitempty"`
-
-	AmbulanceId string `json:"ambulanceId"`
 
 	Notes string `json:"notes,omitempty"`
 }

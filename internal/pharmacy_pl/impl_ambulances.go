@@ -133,3 +133,62 @@ func (api *implAmbulancesAPI) DeleteAmbulance(ctx *gin.Context) {
 			})
 	}
 }
+
+// GetAmbulancePrescriptions - Provides the ambulance waiting list
+func (api *implAmbulancesAPI) GetAllAmbulances(ctx *gin.Context) {
+	value, exists := ctx.Get("db_service")
+	if !exists {
+		ctx.JSON(
+			http.StatusInternalServerError,
+			gin.H{
+				"status":  "Internal Server Error",
+				"message": "db_service not found",
+				"error":   "db_service not found",
+			})
+		return
+	}
+
+	db, ok := value.(db_service.DbService[Ambulance])
+	if !ok {
+		ctx.JSON(
+			http.StatusInternalServerError,
+			gin.H{
+				"status":  "Internal Server Error",
+				"message": "db_service context is not of type db_service.DbService",
+				"error":   "cannot cast db_service context to db_service.DbService",
+			})
+		return
+	}
+
+	ambulances, err := db.GetDocuments(ctx)
+
+	if ambulances == nil {
+		ambulances = []Ambulance{}
+	}
+
+	switch err {
+	case nil:
+		ctx.JSON(
+			http.StatusOK,
+			ambulances,
+		)
+	case db_service.ErrNotFound:
+		ctx.JSON(
+			http.StatusNotFound,
+			gin.H{
+				"status":  "Not Found",
+				"message": "Ambulance not found",
+				"error":   err.Error(),
+			},
+		)
+	default:
+		ctx.JSON(
+			http.StatusBadGateway,
+			gin.H{
+				"status":  "Bad Gateway",
+				"message": "Failed to retrieve ambulances from database",
+				"error":   err.Error(),
+			})
+	}
+
+}

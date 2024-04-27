@@ -10,6 +10,42 @@ import (
 	"github.com/google/uuid"
 )
 
+func validatePrescription(entry Prescription) []string {
+	var errorMessages []string
+
+	if entry.Id == "" {
+		errorMessages = append(errorMessages, "ID is required")
+	}
+
+	if entry.PatientName == "" {
+		errorMessages = append(errorMessages, "Patient Name is required")
+	}
+
+	if entry.PatientId == "" {
+		errorMessages = append(errorMessages, "Patient ID is required")
+	}
+
+	if entry.DoctorName == "" {
+		errorMessages = append(errorMessages, "Doctor Name is required")
+	}
+
+	if entry.ValidUntil.IsZero() { // Assuming ValidUntil is a time.Time type
+		errorMessages = append(errorMessages, "Valid Until is required and must be a valid date")
+	}
+
+	if entry.Medicines == nil || len(entry.Medicines) == 0 { // Assuming Medicines is a slice
+		errorMessages = append(errorMessages, "At least one medicine is required")
+	}
+
+	// If there are error messages, return them with a Bad Request status
+	if len(errorMessages) > 0 {
+		return errorMessages
+	}
+
+	// If no errors, return nil for the gin.H and 0 for the status code
+	return nil
+}
+
 // Nasledujúci kód je kópiou vygenerovaného a zakomentovaného kódu zo súboru api_ambulance_waiting_list.go
 
 // CreatePrescription - Saves new entry into waiting list
@@ -25,32 +61,38 @@ func (api *implPrescriptionsAPI) CreatePrescription(ctx *gin.Context) {
 			}, http.StatusBadRequest
 		}
 
-		if entry.PatientName == "" {
-			return nil, gin.H{
-				"status":  http.StatusBadRequest,
-				"message": "Patient Name is required",
-			}, http.StatusBadRequest
-		}
-
-		if entry.DoctorName == "" {
-			return nil, gin.H{
-				"status":  http.StatusBadRequest,
-				"message": "Doctor Name is required",
-			}, http.StatusBadRequest
-		}
-
 		if entry.Id == "" || entry.Id == "@new" {
 			entry.Id = uuid.NewString()
 		}
 
+		if entry.IssuedDate.IsZero() {
+			entry.IssuedDate = time.Now()
+		}
+
+		defaultValidTime := 7 * 24 * time.Hour // One week
+
+		if entry.ValidUntil.IsZero() {
+			entry.ValidUntil = time.Now().Add(defaultValidTime)
+		}
+
+		// Validate the Prescription
+		errorMessages := validatePrescription(entry)
+		if errorMessages != nil {
+			return nil, gin.H{
+				"status":  http.StatusBadRequest,
+				"message": "Required information is missing",
+				"errors":  errorMessages,
+			}, http.StatusBadRequest
+		}
+
 		conflictIndx := slices.IndexFunc(ambulance.PrescriptionList, func(prescription Prescription) bool {
-			return entry.Id == prescription.Id || entry.PatientName == prescription.PatientName
+			return entry.Id == prescription.Id
 		})
 
 		if conflictIndx >= 0 {
 			return nil, gin.H{
 				"status":  http.StatusConflict,
-				"message": "Entry already exists",
+				"message": "Prescription with this ID already exists",
 			}, http.StatusConflict
 		}
 
