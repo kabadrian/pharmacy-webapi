@@ -32,8 +32,8 @@ jobs:
       with:
         # version: 7.0.0-beta - at time of writing this text only prerelease was available
         generator: go-gin-server
-        input: api/ambulance-wl.openapi.yaml
-        additional-properties: apiPath=internal/ambulance_wl,packageName=ambulance_wl
+        input: api/pharmacy-pl.openapi.yaml
+        additional-properties: apiPath=internal/pharmacy_pl,packageName=pharmacy_pl
         template: scripts/templates
 
     - name: Build
