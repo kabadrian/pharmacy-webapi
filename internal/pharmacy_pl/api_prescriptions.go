@@ -45,7 +45,14 @@ func newPrescriptionsAPI() PrescriptionsAPI {
 	return &implPrescriptionsAPI{}
 }
 
-func (this *implPrescriptionsAPI) addRoutes(routerGroup *gin.RouterGroup) {
+func (api *implPrescriptionsAPI) addRoutes(routerGroup *gin.RouterGroup) {
+	prescriptionsGroup := routerGroup.Group("/ambulances/:ambulanceId/prescriptions")
+	prescriptionsGroup.POST("", api.CreatePrescription)
+	prescriptionsGroup.GET("", api.GetAmbulancePrescriptions)
+	prescriptionsGroup.DELETE("/:prescriptionId", api.DeletePrescription)
+	prescriptionsGroup.PUT("/:prescriptionId", api.UpdatePrescription)
+	prescriptionsGroup.GET("/:prescriptionId", api.GetPrescriptionById)
+
 }
 
 // Copy following section to separate file, uncomment, and implement accordingly

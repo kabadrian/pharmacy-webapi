@@ -10,6 +10,10 @@
 
 package pharmacy_pl
 
+import (
+	"time"
+)
+
 type Prescription struct {
 
 	Id string `json:"id"`
@@ -18,9 +22,9 @@ type Prescription struct {
 
 	DoctorName string `json:"doctorName"`
 
-	IssuedDate string `json:"issuedDate"`
+	IssuedDate time.Time `json:"issuedDate"`
 
-	ValidUntil string `json:"validUntil"`
+	ValidUntil time.Time `json:"validUntil"`
 
 	Medicines []Medicine `json:"medicines"`
 

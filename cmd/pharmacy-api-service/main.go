@@ -22,6 +22,9 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
+
+	log.Printf("Port", port)
+
 	environment := os.Getenv("AMBULANCE_API_ENVIRONMENT")
 	if !strings.EqualFold(environment, "production") { // case insensitive comparison
 		gin.SetMode(gin.DebugMode)
@@ -40,7 +43,7 @@ func main() {
 	engine.Use(corsMiddleware)
 
 	// setup context update  middleware
-	dbService := db_service.NewMongoService[ambulance_wl.Ambulance](db_service.MongoServiceConfig{})
+	dbService := db_service.NewMongoService[pharmacy_pl.Ambulance](db_service.MongoServiceConfig{})
 	defer dbService.Disconnect(context.Background())
 	engine.Use(func(ctx *gin.Context) {
 		ctx.Set("db_service", dbService)

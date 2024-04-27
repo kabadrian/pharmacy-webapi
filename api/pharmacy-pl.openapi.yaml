@@ -12,9 +12,56 @@ info:
     name: CC BY 4.0
     url: "https://creativecommons.org/licenses/by/4.0/"
 tags:
- - name: prescriptions
-   description: Pharmacy Prescription API
+  - name: prescriptions
+    description: Pharmacy Prescription API
+  - name: ambulances
+    description: Ambulance details
 paths:
+  "/ambulances":
+    post:
+      tags:
+        - ambulances
+      summary: Creates a new ambulance
+      operationId: createAmbulance
+      description: Use this endpoint to register a new ambulance in the system.
+      requestBody:
+        description: The ambulance data to register.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ambulance'
+      responses:
+        "201":
+          description: Ambulance created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ambulance'
+        "400":
+          description: Invalid input provided.
+        "409": 
+          description: Ambulance with provided id already exists.
+
+  "/ambulances/{ambulanceId}":
+    delete:
+      tags:
+        - ambulances
+      summary: Deletes a specific ambulance
+      operationId: deleteAmbulance
+      description: Use this endpoint to delete a specific ambulance by its ID.
+      parameters:
+        - in: path
+          name: ambulanceId
+          description: The ID of the ambulance to delete.
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Ambulance deleted successfully.
+        "404":
+          description: Ambulance with the provided ID does not exist.
   "/prescriptions/{ambulanceId}":
     get:
       tags:
@@ -72,7 +119,7 @@ paths:
         "404":
           description: Ambulance with the provided ID does not exist.
 
-  "/prescriptions/{ambulanceId}/{prescriptionId}":
+  "/ambulances/{ambulanceId}/prescriptions/{prescriptionId}":
     get:
       tags:
         - prescriptions
@@ -179,12 +226,12 @@ components:
           example: Dr. Dutoschwarz
         issuedDate:
           type: string
-          format: date
-          example: "2024-04-01"
+          format: date-time
+          example: "2038-12-24T10:35:00Z"
         validUntil:
           type: string
-          format: date
-          example: "2024-06-01"
+          format: date-time
+          example: "2038-12-24T10:35:00Z"
         medicines:
           type: array
           items:
@@ -202,6 +249,24 @@ components:
           type: string
           example: Patient allergic to penicillin. Adjusted medication accordingly.
 
+    Ambulance:
+      type: object
+      required: ["id", "name"]
+      properties:
+        id:
+          type: string
+          example: ambulance-petrzalka
+          description: Unique identifier for the ambulance
+        name: 
+          type: string
+          example: Ambulancia Dr. House, Petrzalka
+          description: Human readable display name of the ambulance
+        prescriptionList:
+          type: array
+          items:
+            $ref: '#/components/schemas/Prescription'
+      example: 
+        $ref: '#components/examples/AmbulanceExample'
     Medicine:
       type: object
       required: [medicineId, name, dosage, quantityPrescribed, quantityDispensed, dispenseDate]
@@ -231,3 +296,48 @@ components:
         unit:
           type: string
           example: tablets
+  examples:
+    AmbulanceExample:
+      summary: Sample GP ambulance
+      description: |
+        Example of GP ambulance with waiting list and predefined conditions.
+      value: 
+        id: gp-house
+        name: "Ambulancia vseobecneho lekarstva Dr. House"
+        prescriptionList:
+          - id: RX123456789
+            patientName: John Smith
+            doctorName: Dr. House
+            issuedDate: "2024-04-01"
+            validUntil: "2024-06-01"
+            medicines:
+              - medicineId: MED3001
+                name: Amoxicillin
+                dosage: "500mg"
+                quantityPrescribed: 30
+                quantityDispensed: 15
+                dispenseDate: "2038-12-24T10:35:00Z"
+                notes: "Take 2 times a day with food to avoid stomach upset."
+                unit: tablets
+            status: "partially dispensed"
+            instructions: "Take one tablet three times a day after meals."
+            ambulanceId: "gp-house"
+            notes: "Patient allergic to penicillin. Adjusted medication accordingly."
+          - id: RX987654321
+            patientName: Alice Johnson
+            doctorName: Dr. House
+            issuedDate: "2038-12-24T10:35:00Z"
+            validUntil: "2038-12-24T10:35:00Z"
+            medicines:
+              - medicineId: MED4002
+                name: Ibuprofen
+                dosage: "200mg"
+                quantityPrescribed: 50
+                quantityDispensed: 50
+                dispenseDate: "2024-04-16"
+                notes: "Take with food. Do not exceed 6 tablets per day."
+                unit: tablets
+            status: "dispensed"
+            instructions: "Take two tablets twice a day."
+            ambulanceId: "gp-house"
+            notes: "Check blood pressure regularly while on medication."
