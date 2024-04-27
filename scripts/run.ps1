@@ -32,6 +32,9 @@ switch ($command) {
     "openapi" {
         docker run --rm -ti -v ${ProjectRoot}:/local openapitools/openapi-generator-cli generate -c /local/scripts/generator-cfg.yaml
     }
+    "docker" {
+        docker build -t kabadrian/pharmacy-webapi:local-build -f ${ProjectRoot}/build/docker/Dockerfile .
+    }
     default {
         throw "Unknown command: $command"
     }
