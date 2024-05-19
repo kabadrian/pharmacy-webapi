@@ -24,5 +24,7 @@ type MedicineOrder struct {
 
 	Notes string `json:"notes,omitempty"`
 
+	State string `json:"state,omitempty"`
+
 	Medicines []Medicine `json:"medicines"`
 }

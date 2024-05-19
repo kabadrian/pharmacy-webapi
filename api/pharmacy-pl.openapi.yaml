@@ -461,6 +461,10 @@ components:
           example: "Dr. House"
         notes:
           type: string
+        state:
+          type: string
+          enum: [pending, shipped, delivered]
+          example: pending
         medicines:
           type: array
           items:
