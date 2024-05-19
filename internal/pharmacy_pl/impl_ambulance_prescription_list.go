@@ -156,7 +156,7 @@ func (api *implPrescriptionsAPI) GetAmbulancePrescriptions(ctx *gin.Context) {
 // GetPrescriptionById - Provides details about waiting list entry
 func (api *implPrescriptionsAPI) GetPrescriptionById(ctx *gin.Context) {
 	updateAmbulanceFunc(ctx, func(c *gin.Context, ambulance *Ambulance) (*Ambulance, interface{}, int) {
-		entryId := ctx.Param("entryId")
+		entryId := ctx.Param("prescriptionId")
 
 		if entryId == "" {
 			return nil, gin.H{

@@ -1,7 +1,9 @@
 internal/pharmacy_pl/README.md
 internal/pharmacy_pl/api_ambulances.go
+internal/pharmacy_pl/api_medicine_orders.go
 internal/pharmacy_pl/api_prescriptions.go
 internal/pharmacy_pl/model_ambulance.go
 internal/pharmacy_pl/model_medicine.go
+internal/pharmacy_pl/model_medicine_order.go
 internal/pharmacy_pl/model_prescription.go
 internal/pharmacy_pl/routers.go

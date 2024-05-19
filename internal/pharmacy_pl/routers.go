@@ -23,6 +23,11 @@ func AddRoutes(engine *gin.Engine) {
   }
   
   {
+    api := newMedicineOrdersAPI()
+    api.addRoutes(group)
+  }
+  
+  {
     api := newPrescriptionsAPI()
     api.addRoutes(group)
   }

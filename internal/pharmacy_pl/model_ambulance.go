@@ -19,4 +19,6 @@ type Ambulance struct {
 	Name string `json:"name"`
 
 	PrescriptionList []Prescription `json:"prescriptionList,omitempty"`
+
+	MedicineOrderList []MedicineOrder `json:"medicineOrderList,omitempty"`
 }

@@ -12,19 +12,5 @@ package pharmacy_pl
 
 type Medicine struct {
 
-	MedicineId string `json:"medicineId"`
-
 	Name string `json:"name"`
-
-	Dosage string `json:"dosage"`
-
-	QuantityPrescribed int32 `json:"quantityPrescribed"`
-
-	QuantityDispensed int32 `json:"quantityDispensed"`
-
-	DispenseDate string `json:"dispenseDate"`
-
-	Notes string `json:"notes,omitempty"`
-
-	Unit string `json:"unit,omitempty"`
 }
