@@ -44,8 +44,84 @@ db[collection].createIndex({ "id": 1 })
 //insert sample data
 let result = db[collection].insertMany([
     {
-        "id": "nitra-zobor",
-        "name": "Dr.House"
+        "id": "bobulova",
+        "name": "Dr. House ambulance",
+        "prescriptionList": [
+            {
+                "id": "predpis-01",
+                "patientName": "Fero Mrkva",
+                "doctorName": "Dr. House",
+                "issuedDate": "2024-12-24T10:35:00Z",
+                "validUntil": "2024-12-24T10:35:00Z",
+                "medicines": [
+                    {
+                        "name": "Aspirin"
+                    },
+                    {
+                        "name": "Lisinopril"
+                    },
+                    {
+                        "name": "Ibuprofen"
+                    }
+                ]
+            },
+            {
+                "id": "predpis-02",
+                "patientName": "Jozef Golonka",
+                "doctorName": "Dr. House",
+                "issuedDate": "2024-12-24T10:35:00Z",
+                "validUntil": "2024-12-24T10:35:00Z",
+                "medicines": [
+                    {
+                        "name": "Aspirin"
+                    },
+                    {
+                        "name": "Ibuprofen"
+                    }
+                ]
+            },
+            {
+                "id": "predpis-01",
+                "patientName": "Silvester Stalone",
+                "doctorName": "Dr. House",
+                "issuedDate": "2024-12-24T10:35:00Z",
+                "validUntil": "2024-12-24T10:35:00Z",
+                "medicines": [
+                    {
+                        "name": "Ibuprofen"
+                    }
+                ]
+            }
+        ],
+        "medicineOrderList": [
+            {
+                "orderId": "order-01",
+                "orderDate": "2024-05-19T12:51:58.777Z",
+                "orderedBy": "Dr. House",
+                "notes": "Delivery date is 3 days",
+                "state": "pending",
+                "medicines": [
+                    {
+                        "name": "Aspirin"
+                    }
+                ]
+            },
+            {
+                "orderId": "order-02",
+                "orderDate": "2024-05-19T12:52:23.744Z",
+                "orderedBy": "Dr. House",
+                "notes": "poznamka",
+                "state": "pending",
+                "medicines": [
+                    {
+                        "name": "Ibuprofen"
+                    },
+                    {
+                        "name": "Aspirin"
+                    }
+                ]
+            }
+        ]
     }
 ]);
 
