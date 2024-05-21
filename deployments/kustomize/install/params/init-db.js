@@ -81,7 +81,7 @@ let result = db[collection].insertMany([
                 ]
             },
             {
-                "id": "predpis-01",
+                "id": "predpis-03",
                 "patientName": "Silvester Stalone",
                 "doctorName": "Dr. House",
                 "issuedDate": "2024-12-24T10:35:00Z",
