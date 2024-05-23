@@ -187,6 +187,22 @@ func (api *implMedicineOrdersAPI) UpdateMedicineOrder(ctx *gin.Context) {
 			}, http.StatusNotFound
 		}
 
+		if entry.OrderedBy != "" {
+			ambulance.MedicineOrderList[entryIndx].OrderedBy = entry.OrderedBy
+		}
+
+		if entry.Notes != "" {
+			ambulance.MedicineOrderList[entryIndx].Notes = entry.Notes
+		}
+
+		if entry.State != "" {
+			ambulance.MedicineOrderList[entryIndx].State = entry.State
+		}
+
+		if !(entry.OrderDate.IsZero()) {
+			ambulance.MedicineOrderList[entryIndx].OrderDate = entry.OrderDate
+		}
+
 		if entry.Medicines != nil {
 			ambulance.MedicineOrderList[entryIndx].Medicines = entry.Medicines
 		}
