@@ -56,6 +56,6 @@ spec:
             - name: AMBULANCE_API_MONGODB_PASSWORD
               value: null
               valueFrom:
-                secretKeycomponents/mongodb/deployment.yamlRef:
+                secretKeyRef:
                   name: mongodb-auth
                   key: password
