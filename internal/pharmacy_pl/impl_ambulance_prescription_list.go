@@ -218,6 +218,10 @@ func (api *implPrescriptionsAPI) UpdatePrescription(ctx *gin.Context) {
 			ambulance.PrescriptionList[entryIndx].PatientName = entry.PatientName
 		}
 
+		if entry.PatientId != "" {
+			ambulance.PrescriptionList[entryIndx].PatientId = entry.PatientId
+		}
+
 		if entry.DoctorName != "" {
 			ambulance.PrescriptionList[entryIndx].DoctorName = entry.DoctorName
 		}
